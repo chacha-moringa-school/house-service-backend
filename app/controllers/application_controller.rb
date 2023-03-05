@@ -5,5 +5,42 @@ class ApplicationController < Sinatra::Base
     get "/" do
       { message: "Good luck with your project!" }.to_json
     end
+
+    get "/services" do
+        services = Service.all
+        services.to_json
+    end
+    
+    get '/services/:id' do
+    service = Service.find(params[:id])
+    service.to_json(include: :workers)
+    end
+    
+    post '/services' do
+    service = Service.create(
+        name: params[:name],
+        description: params[:description],
+        price: params[:price],
+        image_url: params[:image_url]
+    )
+
+    service.to_json
+    end
+
+    patch '/services/:id' do
+    service = Service.find(params[:id])
+    service.update(
+        description: params[:description],
+        price: params[:price]
+    )
+
+    service.to_json
+    end
+    
+    delete '/services/:id' do
+    service = Service.find(params[:id])
+    service.destroy
+    service.to_json
+    end
   
   end
